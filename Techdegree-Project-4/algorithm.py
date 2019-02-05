@@ -53,25 +53,22 @@ class Search:
         return search_file
 
     def search_between_date(self, date1, date2):
-        search_file = self.initial_file.where(WorkLog.date.between(date1, date2))
+        search_file = self.initial_file.where(WorkLog.date.between(date1,
+                                                                   date2))
         return search_file
 
     def edit_entry(self, value, input_key, input_user):
         if input_key == 1:
             value.employee_name = input_user
-            value.save()
         elif input_key == 2:
             value.date = input_user
-            value.save()
         elif input_key == 3:
             value.task = input_user
-            value.save()
         elif input_key == 4:
             value.time = input_user
-            value.save()
         elif input_key == 5:
             value.notes = input_user
-            value.save()
+        value.save()
 
     def delete_entry(self, value):
         value.delete_instance()
