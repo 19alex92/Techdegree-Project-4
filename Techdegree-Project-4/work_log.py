@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import datetime
 import os
 
@@ -76,28 +78,11 @@ def add_entry():
     input("Your entry has been added successfully! Press enter to continue")
 
 
-def test_view(search_file):
-    input("bin im test view")
-
-
-    for entry in search_file:
-        timestamp = entry.timestamp.strftime('%A %B %d, %Y %I:%M%p')
-        print(timestamp)
-        print('='*len(timestamp))
-        print(entry.notes)
-        print(entry.employee_name)
-        print('\n\n'+'='*len(timestamp))
-        input("")
-
-
 def search_entry():
     '''Menu to search for an existing entry'''
     date1 = None
     date2 = None
     input_user = None
-    initial_file = []
-    #search_file = []
-    index_track = []
 
     while True:
         clear_screen()
@@ -113,7 +98,6 @@ def search_entry():
         if input_search == "a":
             # search by a date
             clear_screen()
-            date_search = 'Date'
             print("Please enter a date")
             raw_date_input = input("Use the format DD/MM/YYYY:  ")
             try:
@@ -137,7 +121,6 @@ def search_entry():
         elif input_search == "b":
             # search between two dates
             clear_screen()
-            date_search = 'Date'
             print("Please enter the first date")
             raw_date1_input = input("Use the format DD/MM/YYYY:  ")
             try:
@@ -169,20 +152,17 @@ def search_entry():
                     break
                 else:
                     continue
-            start.search_date(initial_file, search_file, date_search,
-                              date1, date2, input_user, index_track)
-            result_menue(search_file, index_track)
+            search_file = start.search_between_date(date1, date2)
+            result_menue(search_file)
             break
 
         elif input_search == "c":
             # search for time spent
             clear_screen()
-            task_minutes = 'Time spent'
             print("Please enter how much time the task took in minutes")
             try:
                 input_user = int(input("EXAMPLE: Use the format "
                                        "45 for 45 minutes:  "))
-                #input_user = str(input_user)
                 search_file = start.search_time(input_user)
                 result_menue(search_file)
                 break
@@ -282,15 +262,12 @@ def result_menue(search_file):
                 # Menue to edit entrys
                 clear_screen()
                 print("Which entry would you like to edit?")
-                print("(1)Date, (2)Task name, (3)Time spent, (4)Notes")
+                print("(1)Name of employee, (2)Date of task, (3)Task name, (4)Duration task, (5)Additional notes")
                 input_key = int(input(">  "))
                 clear_screen()
                 print("Please type in your updated entry and press enter")
                 input_user = input(">  ")
-                delete_index = index_track[iteration]
-                start.edit_entry(initial_file, delete_index, input_key, input_user)
-                start.backup_file(initial_file)
-                start.update_file(initial_file)
+                start.edit_entry(value, input_key, input_user)
                 clear_screen()
                 input("Update sucessful! Press enter to continue")
                 break

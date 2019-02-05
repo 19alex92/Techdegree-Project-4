@@ -1,7 +1,5 @@
-import csv
 import datetime
 import os
-import re
 
 from peewee import *
 
@@ -54,16 +52,26 @@ class Search:
         search_file = self.initial_file.where(WorkLog.date.contains(input_user))
         return search_file
 
-    def edit_entry(self, initial_file, delete_index, input_key, input_user):
+    def search_between_date(self, date1, date2):
+        search_file = self.initial_file.where(WorkLog.date.between(date1, date2))
+        return search_file
+
+    def edit_entry(self, value, input_key, input_user):
         if input_key == 1:
-            input_key = 'Date'
+            value.employee_name = input_user
+            value.save()
         elif input_key == 2:
-            input_key = 'Task name'
+            value.date = input_user
+            value.save()
         elif input_key == 3:
-            input_key = 'Time spent'
+            value.task = input_user
+            value.save()
         elif input_key == 4:
-            input_key = 'Notes'
-        initial_file[delete_index].update({input_key: input_user})
+            value.time = input_user
+            value.save()
+        elif input_key == 5:
+            value.notes = input_user
+            value.save()
 
     def delete_entry(self, value):
         value.delete_instance()
