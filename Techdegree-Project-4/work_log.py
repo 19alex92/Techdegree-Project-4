@@ -16,9 +16,22 @@ def clear_screen():
 def add_entry():
     '''Menu to add a new entry to the database'''
 
-    clear_screen()
-    print("Welcome, what is your first name?")
-    employee_name = input(">  ")  # wenn Zahlen enthalten sind dann muss ein ERROR kommen, FIX
+    while True:
+        clear_screen()
+        print("Welcome, please type in your name.")
+        try:
+            employee_name = input(">  ")  # wenn Zahlen enthalten sind dann muss ein ERROR kommen, FIX
+            if int(employee_name) != ValueError:
+                raise ValueError
+                continue
+            #elif employee_name:
+            #    break
+            else:
+                break
+        except ValueError:
+            clear_screen()
+            input("Your input is not valid, press enter to try again.")
+            continue
 
     while True:
         clear_screen()
