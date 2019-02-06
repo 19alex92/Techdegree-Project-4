@@ -57,6 +57,17 @@ class Search:
                                                                    date2))
         return search_file
 
+    def show_all_employees(self):
+        employees = self.initial_file.select(WorkLog.employee_name).distinct().order_by(WorkLog.employee_name)
+        for data in employees:
+            print(data.employee_name)
+
+    def show_all_dates(self):
+        dates = self.initial_file.select(WorkLog.date).distinct().order_by(WorkLog.date)
+        for date in dates:
+            date = date.date.strftime('%d/%m/%Y')
+            print(date)
+
     def edit_entry(self, value, input_key, input_user):
         if input_key == 1:
             value.employee_name = input_user

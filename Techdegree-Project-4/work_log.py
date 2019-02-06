@@ -73,9 +73,11 @@ def add_entry():
 
     if decision.upper() == 'Y':
         start.add_to_file(employee_name, date, task, time, notes)
-
-    clear_screen()
-    input("Your entry has been added successfully! Press enter to continue")
+        clear_screen()
+        input("Your entry has been added successfully! Press enter to continue")
+    else:
+        clear_screen()
+        input("Your entry will not be saved, press enter to continue")
 
 
 def search_entry():
@@ -98,7 +100,12 @@ def search_entry():
         if input_search == "a":
             # search by a date
             clear_screen()
-            print("Please enter a date")
+            text = "Please enter a date from the dates above"
+            print("\nList of dates in the database:\n")
+            print("="*len(text))
+            start.show_all_dates()
+            print("="*len(text)+"\n")
+            print(text)
             raw_date_input = input("Use the format DD/MM/YYYY:  ")
             try:
                 input_user = datetime.datetime.strptime(raw_date_input,
@@ -197,10 +204,12 @@ def search_entry():
             # search for name of employee
             clear_screen()
             input_user = None
-            entries = data.select()
-            for names in entries:
-                print(names.employee_name)
-            print("Please enter a name")
+            text = "Please enter a name or a portion of the name from above"
+            print("\nList of employee names in the database:\n")
+            print("="*len(text))
+            start.show_all_employees()
+            print("="*len(text)+"\n")
+            print(text)
             try:
                 input_user = input(">  ")
                 if input_user:
@@ -237,7 +246,7 @@ def result_menue(search_file):
 
         for value in search_file:
             timestamp = value.timestamp.strftime('%A %B %d, %Y %I:%M%p')
-            date = value.date.strftime('%Y-%m-%d')
+            date = value.date.strftime('%d/%m/%Y')
             print("\n""Entry added: "+timestamp)
             print('='*(len(timestamp)+13))
             print("Name of employee: "+value.employee_name)
