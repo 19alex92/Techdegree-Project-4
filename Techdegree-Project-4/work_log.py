@@ -21,13 +21,16 @@ def add_entry():
         print("Welcome, please type in your name.")
         try:
             employee_name = input(">  ")  # wenn Zahlen enthalten sind dann muss ein ERROR kommen, FIX
-            if int(employee_name) != ValueError:
-                raise ValueError
-                continue
-            #elif employee_name:
-            #    break
+            if employee_name:
+                try:
+                    int(employee_name)
+                    clear_screen()
+                    input("Your input is not valid, press enter to try again.")
+                    continue
+                except ValueError:
+                    break
             else:
-                break
+                raise ValueError
         except ValueError:
             clear_screen()
             input("Your input is not valid, press enter to try again.")
