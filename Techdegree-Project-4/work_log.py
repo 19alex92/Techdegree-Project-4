@@ -20,7 +20,7 @@ def add_entry():
         clear_screen()
         print("Welcome, please type in your name.")
         try:
-            employee_name = input(">  ")  # wenn Zahlen enthalten sind dann muss ein ERROR kommen, FIX
+            employee_name = input(">  ")
             if employee_name:
                 try:
                     int(employee_name)
@@ -252,70 +252,74 @@ def search_entry():
 
 def result_menue(search_file):
     '''Displays the search results in a meaningful way'''
-    iteration = 0
     total_page = len(search_file)
     current_page = 1
     loop = True
-    
+
     while loop:
         clear_screen()
 
-        for value in search_file:
-            timestamp = value.timestamp.strftime('%A %B %d, %Y %I:%M%p')
-            date = value.date.strftime('%d/%m/%Y')
-            print("\n""Entry added: "+timestamp)
-            print('='*(len(timestamp)+13))
-            print("Name of employee: "+value.employee_name)
-            print("Date of task: "+date)
-            print("Task name: "+value.task)
-            print("Duration task: {} minutes".format(str(value.time)))
-            print("Additional notes: "+value.notes)
-            print('='*(len(timestamp)+13))
-            print("\nResult {} of {}".format(current_page, total_page))
-            print("\n[N]ext, [E]dit, [D]elete, [R]eturn to search menu")
-            user_input = input(">  ")
-            if user_input.upper() == "N":
-                if current_page < total_page:
+        if search_file.exists():
+            for value in search_file:
+                timestamp = value.timestamp.strftime('%A %B %d, %Y %I:%M%p')
+                date = value.date.strftime('%d/%m/%Y')
+                print("\n""Entry added: "+timestamp)
+                print('='*(len(timestamp)+13))
+                print("Name of employee: "+value.employee_name)
+                print("Date of task: "+date)
+                print("Task name: "+value.task)
+                print("Duration task: {} minutes".format(str(value.time)))
+                print("Additional notes: "+value.notes)
+                print('='*(len(timestamp)+13))
+                print("\nResult {} of {}".format(current_page, total_page))
+                print("\n[N]ext, [E]dit, [D]elete, [R]eturn to search menu")
+                user_input = input(">  ")
+                if user_input.upper() == "N":
+                    if current_page < total_page:
+                        clear_screen()
+                        current_page += 1
+                        continue
+                    else:
+                        clear_screen()
+                        current_page = 1
+                        continue
+                elif user_input.upper() == "E":
+                    # Menue to edit entrys
                     clear_screen()
-                    current_page += 1
+                    print("Which entry would you like to edit?")
+                    print("(1)Name of employee, (2)Date of task, (3)Task name, (4)Duration task, (5)Additional notes")
+                    input_key = int(input(">  "))
+                    clear_screen()
+                    print("Please type in your updated entry and press enter")
+                    input_user = input(">  ")
+                    start.edit_entry(value, input_key, input_user)
+                    clear_screen()
+                    input("Update sucessful! Press enter to continue")
+                    break
+
+                elif user_input.upper() == "D":
+                    # Menue to delete entrys
+                    clear_screen()
+                    print("\nAre you sure you want to delete this entry? Y/N")
+                    user_input = input(">  ")
+                    if user_input.upper() == "Y":
+                        start.delete_entry(value)
+                        clear_screen()
+                        input("Deleting successful press enter to continue")
+                        loop = False
                     continue
+                elif user_input.upper() == "R":
+                    search_entry()
+                    loop = False
                 else:
                     clear_screen()
-                    current_page = 1
+                    print("Ups this doesn't seem to be a valid input.")
+                    input("Press enter to try again")
                     continue
-            elif user_input.upper() == "E":
-                # Menue to edit entrys
-                clear_screen()
-                print("Which entry would you like to edit?")
-                print("(1)Name of employee, (2)Date of task, (3)Task name, (4)Duration task, (5)Additional notes")
-                input_key = int(input(">  "))
-                clear_screen()
-                print("Please type in your updated entry and press enter")
-                input_user = input(">  ")
-                start.edit_entry(value, input_key, input_user)
-                clear_screen()
-                input("Update sucessful! Press enter to continue")
-                break
-
-            elif user_input.upper() == "D":
-                # Menue to delete entrys
-                clear_screen()
-                print("\nAre you sure you want to delete this entry? Y/N")
-                user_input = input(">  ")
-                if user_input.upper() == "Y":
-                    start.delete_entry(value)
-                    clear_screen()
-                    input("Deleting successful press enter to continue") # while loop unterbrechen bzw. condition bei for loop damit sie neu gestartet wird
-                    loop = False
-                continue
-            elif user_input.upper() == "R":
-                search_entry()
-                loop = False
-            else:
-                clear_screen()
-                print("Ups this doesn't seem to be a valid input.")
-                input("Press enter to try again")
-                continue
+        else:
+            input("No search result, press enter to try again")
+            search_entry()
+            break
 
 
 def main_menu():
