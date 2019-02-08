@@ -5,6 +5,7 @@ from peewee import *
 
 db = SqliteDatabase('data_work_log.db')
 
+
 class WorkLog(Model):
 
     employee_name = CharField(max_length=255)
@@ -32,7 +33,8 @@ class Search:
         db.create_tables([WorkLog], safe=True)
 
     def add_to_file(self, employee_name, date, task, time, notes):
-        WorkLog.create(employee_name=employee_name, date=date, task=task, time=time, notes=notes)
+        WorkLog.create(employee_name=employee_name, date=date,
+                       task=task, time=time, notes=notes)
 
     def search_string(self, input_user):
         search_file = self.initial_file.where(WorkLog.employee_name.contains(input_user) |

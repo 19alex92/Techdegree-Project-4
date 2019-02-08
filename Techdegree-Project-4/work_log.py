@@ -90,7 +90,7 @@ def add_entry():
     if decision.upper() == 'Y':
         start.add_to_file(employee_name, date, task, time, notes)
         clear_screen()
-        input("Your entry has been added successfully! Press enter to continue")
+        input("The entry has been added successfully! Press enter to continue")
     else:
         clear_screen()
         input("Your entry will not be saved, press enter to continue")
@@ -287,7 +287,9 @@ def result_menue(search_file):
                     # Menue to edit entrys
                     clear_screen()
                     print("Which entry would you like to edit?")
-                    print("(1)Name of employee, (2)Date of task, (3)Task name, (4)Duration task, (5)Additional notes")
+                    print("(1)Name of employee, (2)Date of task, "
+                          "(3)Task name, (4)Duration task, "
+                          "(5)Additional notes")
                     input_key = int(input(">  "))
                     clear_screen()
                     print("Please type in your updated entry and press enter")
