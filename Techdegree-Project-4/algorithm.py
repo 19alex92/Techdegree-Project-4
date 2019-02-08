@@ -37,13 +37,19 @@ class Search:
                        task=task, time=time, notes=notes)
 
     def search_string(self, input_user):
-        search_file = self.initial_file.where(WorkLog.employee_name.contains(input_user) |
-                                              WorkLog.task.contains(input_user) |
-                                              WorkLog.notes.contains(input_user))
+        search_file = (
+                       self.initial_file
+                       .where(WorkLog.employee_name.contains(input_user) |
+                              WorkLog.task.contains(input_user) |
+                              WorkLog.notes.contains(input_user))
+        )
         return search_file
 
     def search_employee(self, input_user):
-        search_file = self.initial_file.where(WorkLog.employee_name.contains(input_user))
+        search_file = (
+                       self.initial_file
+                       .where(WorkLog.employee_name.contains(input_user))
+        )
         return search_file
 
     def search_time(self, input_user):
@@ -51,7 +57,10 @@ class Search:
         return search_file
 
     def search_date(self, input_user):
-        search_file = self.initial_file.where(WorkLog.date.contains(input_user))
+        search_file = (
+                       self.initial_file
+                       .where(WorkLog.date.contains(input_user))
+        )
         return search_file
 
     def search_between_date(self, date1, date2):
@@ -60,12 +69,18 @@ class Search:
         return search_file
 
     def show_all_employees(self):
-        employees = self.initial_file.select(WorkLog.employee_name).distinct().order_by(WorkLog.employee_name)
+        employees = (
+                     self.initial_file.select(WorkLog.employee_name)
+                     .distinct().order_by(WorkLog.employee_name)
+        )
         for data in employees:
             print(data.employee_name)
 
     def show_all_dates(self):
-        dates = self.initial_file.select(WorkLog.date).distinct().order_by(WorkLog.date)
+        dates = (
+                 self.initial_file.select(WorkLog.date)
+                 .distinct().order_by(WorkLog.date)
+        )
         for date in dates:
             date = date.date.strftime('%d/%m/%Y')
             print(date)
