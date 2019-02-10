@@ -119,7 +119,8 @@ def search_entry():
             text = "Please enter a date from the dates above"
             print("\nList of dates in the database:\n")
             print("="*len(text))
-            start.show_all_dates()
+            for date in start.show_all_dates():
+                print(date)
             print("="*len(text)+"\n")
             print(text)
             raw_date_input = input("Use the format DD/MM/YYYY:  ")
@@ -223,7 +224,8 @@ def search_entry():
             text = "Please enter a name or a portion of the name from above"
             print("\nList of employee names in the database:\n")
             print("="*len(text))
-            start.show_all_employees()
+            for employees in start.show_all_employees():
+                print(employees)
             print("="*len(text)+"\n")
             print(text)
             try:
