@@ -117,9 +117,15 @@ class AlgorithmTests(unittest.TestCase):
         self.assertEqual(log.text_main_menu, text)
 
     def test_add_entry(self):
-        pass
-        #with self.assertRaises(ValueError):
-        #    log.add_entry("a")
+        employee_name = "TestPerson"
+        raw_date = "12/12/2019"
+        date = datetime.datetime.strptime(raw_date, "%d/%m/%Y")
+        task = "TestTask"
+        time = 45
+        notes = "TestNotes"
+        decision = "Y"
+        log.add_entry(employee_name, date, task, time, notes, decision)
+        self.assertEqual(employee_name, log.employee_name) # input und die Data welche in der Datenbank ist
 
     def test_search_entry(self):
         pass
