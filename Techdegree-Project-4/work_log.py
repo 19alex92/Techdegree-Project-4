@@ -8,6 +8,47 @@ from algorithm import Search, WorkLog
 data = WorkLog()
 start = Search(data.select())
 
+# Collections of texts used in this program
+
+enter = "Press enter to continue"
+
+try_again = (
+    "Press enter to try again or 'R' "
+    "to return to the main menu."
+)
+
+no_entry = (
+    "Seems like you havn't entered anything, "
+    "press enter to try again."
+)
+
+not_valid = "Ups this doesn't seem to be a valid input."
+
+text_search_entry = (
+    "How would you like to search for an entry?\n"
+    "a) By Date\n"
+    "b) Between dates\n"
+    "c) By Time Spent\n"
+    "d) By search term\n"
+    "e) By name of employee\n"
+    "f) Back to main menue"
+)
+
+edit_entry_text = (
+    "Which entry would you like to edit?\n"
+    "(1)Name of employee, (2)Date of task, "
+    "(3)Task name, (4)Duration task, "
+    "(5)Additional notes"
+)
+
+text_main_menu = (
+    "WORK LOG\n"
+    "What would you like to do?\n"
+    "a) Add new entry\n"
+    "b) Search for an existing entry\n"
+    "c) Quit program"
+)
+
 
 def clear_screen():
         os.system("cls" if os.name == "nt" else "clear")
@@ -25,7 +66,7 @@ def add_entry():
                 try:
                     int(employee_name)
                     clear_screen()
-                    input("Your input is not valid, press enter to try again.")
+                    input(not_valid)
                     continue
                 except ValueError:
                     break
@@ -46,7 +87,7 @@ def add_entry():
         except ValueError:
             clear_screen()
             print("Ups! Seems like '{}' isn't a valid date.".format(raw_date))
-            input("Press enter to try again")
+            input(enter)
             continue
 
     while True:
@@ -75,8 +116,8 @@ def add_entry():
             break
         except ValueError:
             clear_screen()
-            print("Ups this doesn't seem to be a valid rounded minutes input")
-            input("Press enter to try again.")
+            print(not_valid)
+            input(enter)
             continue
 
     clear_screen()
@@ -104,16 +145,10 @@ def search_entry():
 
     while True:
         clear_screen()
-        print("How would you like to search for an entry?")
-        print("a) By Date")
-        print("b) Between dates")
-        print("c) By Time Spent")
-        print("d) By search term")
-        print("e) By name of employee")
-        print("f) Back to main menue")
+        print(text_search_entry)
         input_search = input("  > ")
 
-        if input_search == "a":
+        if input_search.lower() == "a":
             # search by a date
             clear_screen()
             text = "Please enter a date from the dates above"
@@ -134,15 +169,14 @@ def search_entry():
                 clear_screen()
                 print("Ups! Seems like '{}' isn't a valid date."
                       .format(raw_date_input))
-                print("Press enter to try again or 'R' "
-                      "to return to the main menu.")
+                print(try_again)
                 user_input = input(">  ")
                 if user_input.upper() == "R":
                     break
                 else:
                     continue
 
-        elif input_search == "b":
+        elif input_search.lower() == "b":
             # search between two dates
             clear_screen()
             print("Please enter the first date")
@@ -153,8 +187,7 @@ def search_entry():
                 clear_screen()
                 print("Ups! Seems like '{}' isn't a valid date."
                       .format(raw_date1_input))
-                print("Press enter to try again or 'R' "
-                      "to return to the main menu.")
+                print(try_again)
                 user_input = input(">  ")
                 if user_input.upper() == "R":
                     break
@@ -169,8 +202,7 @@ def search_entry():
                 clear_screen()
                 print("Ups! Seems like '{}' isn't a valid date."
                       .format(raw_date2_input))
-                print("Press enter to try again or 'R' "
-                      "to return to the main menu.")
+                print(try_again)
                 user_input = input(">  ")
                 if user_input.upper() == "R":
                     break
@@ -180,7 +212,7 @@ def search_entry():
             result_menue(search_file)
             break
 
-        elif input_search == "c":
+        elif input_search.lower() == "c":
             # search for time spent
             clear_screen()
             print("Please enter how much time the task took in minutes")
@@ -192,12 +224,11 @@ def search_entry():
                 break
             except ValueError:
                 clear_screen()
-                print("Ups this doesn't seem to "
-                      "be a valid rounded minutes input")
-                input("Press enter to try again.")
+                print(not_valid)
+                input(enter)
                 continue
 
-        elif input_search == "d":
+        elif input_search.lower() == "d":
             # search for string in title, notes or name of employee
             clear_screen()
             input_user = None
@@ -213,11 +244,10 @@ def search_entry():
                     raise ValueError
             except ValueError:
                 clear_screen()
-                input("Seems like you havn't entered anything, "
-                      "press enter to try again.")
+                input(no_entry)
                 continue
 
-        elif input_search == "e":
+        elif input_search.lower() == "e":
             # search for name of employee
             clear_screen()
             input_user = None
@@ -238,17 +268,16 @@ def search_entry():
                     raise ValueError
             except ValueError:
                 clear_screen()
-                input("Seems like you havn't entered anything, "
-                      "press enter to try again.")
+                input(no_entry)
                 continue
 
-        elif input_search == "f":
+        elif input_search.lower() == "f":
             break
 
         else:
             clear_screen()
-            print("Ups this doesn't seem to be a valid input.")
-            input("Press enter to try again")
+            print(not_valid)
+            input(enter)
             continue
 
 
@@ -288,10 +317,7 @@ def result_menue(search_file):
                 elif user_input.upper() == "E":
                     # Menue to edit entrys
                     clear_screen()
-                    print("Which entry would you like to edit?")
-                    print("(1)Name of employee, (2)Date of task, "
-                          "(3)Task name, (4)Duration task, "
-                          "(5)Additional notes")
+                    print(edit_entry_text)
                     input_key = int(input(">  "))
                     clear_screen()
                     print("Please type in your updated entry and press enter")
@@ -317,8 +343,8 @@ def result_menue(search_file):
                     loop = False
                 else:
                     clear_screen()
-                    print("Ups this doesn't seem to be a valid input.")
-                    input("Press enter to try again")
+                    print(not_valid)
+                    input(enter)
                     continue
         else:
             input("No search result, press enter to try again")
@@ -326,35 +352,34 @@ def result_menue(search_file):
             break
 
 
-def main_menu():
+def main_menu(input_menue=None):
     '''Displays the main menu of the application'''
     while True:
         clear_screen()
-        print("WORK LOG")
-        print("What would you like to do?")
-        print("a) Add new entry")
-        print("b) Search for an existing entry")
-        print("c) Quit program")
-        input_menue = input("  > ")
-        if input_menue.upper() == "A":
-            add_entry()
-            continue
-        elif input_menue.upper() == "B":
-            try:
-                search_entry()
+        print(text_main_menu)
+        try:
+            input_menue = input("  > ")
+            if input_menue.upper() == "A":
+                add_entry()
                 continue
-            except FileNotFoundError:
+            elif input_menue.upper() == "B":
+                try:
+                    search_entry()
+                    continue
+                except FileNotFoundError:
+                    clear_screen()
+                    print("No file, please add entry before search")
+                    input(enter)
+                    continue
+            elif input_menue.upper() == "C":
+                break
+            else:
+                raise ValueError
+        except ValueError:
                 clear_screen()
-                print("No file, please add entry before search")
-                input("Press enter to continue")
+                print(not_valid)
+                input(enter)
                 continue
-        elif input_menue.upper() == "C":
-            break
-        else:
-            clear_screen()
-            print("Ups this doesn't seem to be a valid input.")
-            input("Press enter to continue")
-            continue
 
 
 if __name__ == "__main__":

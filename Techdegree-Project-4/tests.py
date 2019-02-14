@@ -1,6 +1,8 @@
 import datetime
 import unittest
 from unittest import mock
+import unittest.mock
+
 
 from peewee import *
 
@@ -92,8 +94,32 @@ class AlgorithmTests(unittest.TestCase):
         method = start_testing.edit_entry(TestData.get(), 5, self.notes)
         self.assertEqual(method, TestData.get())
 
+    def test_texts(self):
+        text = str(log.enter)
+        self.assertEqual(log.enter, text)
+
+        text = str(log.try_again)
+        self.assertEqual(log.try_again, text)
+
+        text = str(log.no_entry)
+        self.assertEqual(log.no_entry, text)
+
+        text = str(log.not_valid)
+        self.assertEqual(log.not_valid, text)
+
+        text = str(log.text_search_entry)
+        self.assertEqual(log.text_search_entry, text)
+
+        text = str(log.edit_entry_text)
+        self.assertEqual(log.edit_entry_text, text)
+
+        text = str(log.text_main_menu)
+        self.assertEqual(log.text_main_menu, text)
+
     def test_add_entry(self):
         pass
+        #with self.assertRaises(ValueError):
+        #    log.add_entry("a")
 
     def test_search_entry(self):
         pass
@@ -102,9 +128,12 @@ class AlgorithmTests(unittest.TestCase):
         pass
 
     def test_main_menu(self):
-        mock.builtins.input = lambda _: "A"
-        assert log.main_menu == log.add_entry()
+        pass
+        #with unittest.mock.patch('builtins.input', return_value='D'):
+         #   assert log.main_menu() == "Ups this doesn't seem to be a valid input."
 
+        #with self.assertRaises(ValueError):
+         #   log.main_menu("e")
 
 
 if __name__ == "__main__":
