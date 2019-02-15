@@ -50,13 +50,16 @@ class AlgorithmTests(unittest.TestCase):
 
         data = WorkLog()
         data = data.select()
-        self.search_solution = data.where(WorkLog.notes.contains("agtzuiklmnbew"))
 
         self.employee_name = 'Test Person'
         self.date = datetime.datetime(2019, 1, 1, 0, 0, 0, 0)
+        self.raw_date = "12/12/2019"
         self.task = 'Test Task'
         self.time = 55
-        self.notes = 'Test note'
+        self.notes = "agtzuiklmnbew"
+
+        self.search_solution = data.where(WorkLog.notes.contains("agtzuiklmnbew"))
+        self.search_entry_date_solution = data.where(WorkLog.date.contains(datetime.datetime.strptime(self.raw_date, "%d/%m/%Y")))
 
     def test_search_string(self):
         method = start_testing.search_string(self.employee_name, TestData)
@@ -121,33 +124,48 @@ class AlgorithmTests(unittest.TestCase):
         self.assertEqual(log.text_main_menu, text)
 
     def test_add_entry(self):
-        employee_name = "TestPerson"
-        raw_date = "12/12/2019"
-        task = "TestTask"
-        time = 45
-        notes = "agtzuiklmnbew"
-        decision = "Y"
-        log.add_entry(employee_name, raw_date, task, time, notes, decision)
-        self.assertEqual([value.notes for value in self.search_solution], [notes])
+        log.add_entry(self.employee_name, self.raw_date, self.task, self.time, self.notes, decision='Y', access=False)
+        
+
+        self.assertEqual([value.notes for value in self.search_solution], [self.notes])
+
         for value in self.search_solution:
             value.delete_instance()
 
-        self.assertEqual(log.add_entry(employee_name, raw_date, task, time, notes, decision='N'), 'test_successful')
+        self.assertEqual(log.add_entry(self.employee_name, self.raw_date, self.task, self.time, self.notes, decision='N', access=False), 'test_successful')
 
         with self.assertRaises(ValueError):
-            log.add_entry(employee_name=employee_name, raw_date='45', task=task, time=time, notes=notes, decision='N')
+            log.add_entry(employee_name=self.employee_name, raw_date='45', task=self.task, time=self.time, notes=self.notes, decision='N', access=False)
 
         with self.assertRaises(ValueError):
-            log.add_entry(employee_name=None, raw_date=raw_date, task=task, time=time, notes=notes, decision='N')
+            log.add_entry(employee_name=None, raw_date=self.raw_date, task=self.task, time=self.time, notes=self.notes, decision='N', access=False)
 
         with self.assertRaises(ValueError):
-            log.add_entry(employee_name=employee_name, raw_date=raw_date, task=None, time=time, notes=notes, decision='N')
+            log.add_entry(employee_name=self.employee_name, raw_date=self.raw_date, task=None, time=self.time, notes=self.notes, decision='N', access=False)
 
         with self.assertRaises(ValueError):
-            log.add_entry(employee_name=employee_name, raw_date=raw_date, task=task, time=-1, notes=notes, decision='N')
+            log.add_entry(employee_name=self.employee_name, raw_date=self.raw_date, task=self.task, time=-1, notes=self.notes, decision='N', access=False)
 
     def test_search_entry(self):
-        pass
+        log.add_entry(self.employee_name, self.raw_date, self.task, self.time, self.notes, decision='Y', access=False)
+
+        self.assertEqual([value.date for value in log.search_entry(input_search='a', raw_date_input=self.raw_date, access=False)], [value.date for value in self.search_entry_date_solution])
+        self.assertEqual([value.date for value in log.search_entry(input_search='b', raw_date1_input="11/12/2019", raw_date2_input="13/12/2019", access=False)], [value.date for value in self.search_entry_date_solution])
+        self.assertEqual([value.time for value in log.search_entry(input_search='c', input_user=self.time, access=False)], [self.time])
+        self.assertEqual([value.notes for value in log.search_entry(input_search='d', input_user=self.notes, access=False)], [self.notes])
+        self.assertEqual([value.employee_name for value in log.search_entry(input_search='e', input_user=self.employee_name, access=False)], [self.employee_name])
+
+        for value in self.search_solution:
+            value.delete_instance()
+
+        self.assertEqual(log.search_entry(input_search='h', access=False), 'test_successful')
+
+        with self.assertRaises(ValueError):
+            log.search_entry(input_search='a', raw_date_input='32/02/2019', access=False)
+        with self.assertRaises(ValueError):
+            log.search_entry(input_search='b', raw_date1_input="35-11-2019", raw_date2_input="36-12-2019", access=False)
+        with self.assertRaises(ValueError):
+            log.search_entry(input_search='b', raw_date1_input="11/12/2019", raw_date2_input="36-12-2019", access=False)
 
     def test_result_menue(self):
         pass

@@ -55,20 +55,12 @@ def clear_screen():
 
 
 def add_entry(employee_name=None, raw_date=None, task=None,
-              time=None, notes=None, decision=None):
+              time=None, notes=None, decision=None, access=True):
     '''Menu to add a new entry to the database'''
 
-    access = None
-    loop = True
-
-    clear_screen()
-    if not notes:
-        input("Press enter to start adding an entry")
-        access = True
-
-    while loop:
+    while True:
         clear_screen()
-        print("Please type in your name.")
+        print("Welcome, please type in your name.")
         try:
             if access:
                 employee_name = input(">  ")
@@ -168,16 +160,16 @@ def add_entry(employee_name=None, raw_date=None, task=None,
             return 'test_successful'
 
 
-def search_entry():
+def search_entry(input_search=None, raw_date_input=None, input_user=None, raw_date1_input=None, raw_date2_input=None, access=True):
     '''Menu to search for an existing entry'''
     date1 = None
     date2 = None
-    input_user = None
 
     while True:
         clear_screen()
         print(text_search_entry)
-        input_search = input("  > ")
+        if access:
+            input_search = input("  > ")
 
         if input_search.lower() == "a":
             # search by a date
@@ -189,29 +181,37 @@ def search_entry():
                 print(date)
             print("="*len(text)+"\n")
             print(text)
-            raw_date_input = input("Use the format DD/MM/YYYY:  ")
+            if access:
+                raw_date_input = input("Use the format DD/MM/YYYY:  ")
             try:
                 input_user = datetime.datetime.strptime(raw_date_input,
                                                         "%d/%m/%Y")
                 search_file = start.search_date(input_user)
-                result_menue(search_file)
+                if access:
+                    result_menue(search_file)
+                else:
+                    return search_file
                 break
             except ValueError:
                 clear_screen()
                 print("Ups! Seems like '{}' isn't a valid date."
                       .format(raw_date_input))
                 print(try_again)
-                user_input = input(">  ")
-                if user_input.upper() == "R":
-                    break
+                if access:
+                    user_input = input(">  ")
+                    if user_input.upper() == "R": #  TODO TEXT ÄNDERN SODASS USER DAS SIEHT
+                        break
+                    else:
+                        continue
                 else:
-                    continue
+                    raise ValueError
 
         elif input_search.lower() == "b":
             # search between two dates
             clear_screen()
             print("Please enter the first date")
-            raw_date1_input = input("Use the format DD/MM/YYYY:  ")
+            if access:
+                raw_date1_input = input("Use the format DD/MM/YYYY:  ")
             try:
                 date1 = datetime.datetime.strptime(raw_date1_input, "%d/%m/%Y")
             except ValueError:
@@ -219,14 +219,18 @@ def search_entry():
                 print("Ups! Seems like '{}' isn't a valid date."
                       .format(raw_date1_input))
                 print(try_again)
-                user_input = input(">  ")
-                if user_input.upper() == "R":
-                    break
+                if access:
+                    user_input = input(">  ")
+                    if user_input.upper() == "R":
+                        break
+                    else:
+                        continue
                 else:
-                    continue
+                    raise ValueError
             clear_screen()
             print("Please enter the second date")
-            raw_date2_input = input("Use the format DD/MM/YYYY:  ")
+            if access:
+                raw_date2_input = input("Use the format DD/MM/YYYY:  ")
             try:
                 date2 = datetime.datetime.strptime(raw_date2_input, "%d/%m/%Y")
             except ValueError:
@@ -234,13 +238,19 @@ def search_entry():
                 print("Ups! Seems like '{}' isn't a valid date."
                       .format(raw_date2_input))
                 print(try_again)
-                user_input = input(">  ")
-                if user_input.upper() == "R":
-                    break
+                if access:
+                    user_input = input(">  ")
+                    if user_input.upper() == "R":
+                        break
+                    else:
+                        continue
                 else:
-                    continue
+                    raise ValueError
             search_file = start.search_between_date(date1, date2)
-            result_menue(search_file)
+            if access:
+                result_menue(search_file)
+            else:
+                return search_file
             break
 
         elif input_search.lower() == "c":
@@ -248,10 +258,14 @@ def search_entry():
             clear_screen()
             print("Please enter how much time the task took in minutes")
             try:
-                input_user = int(input("EXAMPLE: Use the format "
-                                       "45 for 45 minutes:  "))
+                if access:
+                    input_user = int(input("EXAMPLE: Use the format "
+                                           "45 for 45 minutes:  "))
                 search_file = start.search_time(input_user)
-                result_menue(search_file)
+                if access:
+                    result_menue(search_file)
+                else:
+                    return search_file
                 break
             except ValueError:
                 clear_screen()
@@ -262,14 +276,17 @@ def search_entry():
         elif input_search.lower() == "d":
             # search for string in title, notes or name of employee
             clear_screen()
-            input_user = None
             print("Please enter a word")
             print("It can be in the Title, Notes or the name of employee.")
             try:
-                input_user = input(">  ")
+                if access:
+                    input_user = input(">  ")
                 if input_user:
                     search_file = start.search_string(input_user)
-                    result_menue(search_file)
+                    if access:
+                        result_menue(search_file)
+                    else:
+                        return search_file
                     break
                 else:
                     raise ValueError
@@ -281,7 +298,6 @@ def search_entry():
         elif input_search.lower() == "e":
             # search for name of employee
             clear_screen()
-            input_user = None
             text = "Please enter a name or a portion of the name from above"
             print("\nList of employee names in the database:\n")
             print("="*len(text))
@@ -290,10 +306,14 @@ def search_entry():
             print("="*len(text)+"\n")
             print(text)
             try:
-                input_user = input(">  ")
+                if access:
+                    input_user = input(">  ")
                 if input_user:
                     search_file = start.search_employee(input_user)
-                    result_menue(search_file)
+                    if access:
+                        result_menue(search_file)
+                    else:
+                        return search_file
                     break
                 else:
                     raise ValueError
@@ -308,8 +328,12 @@ def search_entry():
         else:
             clear_screen()
             print(not_valid)
-            input(enter)
-            continue
+            if access:
+                input(enter)
+                continue
+            else:
+                return 'test_successful'
+                break
 
 
 def result_menue(search_file):
