@@ -51,98 +51,121 @@ text_main_menu = (
 
 
 def clear_screen():
-        os.system("cls" if os.name == "nt" else "clear")
+    os.system("cls" if os.name == "nt" else "clear")
 
 
-def add_entry(employee_name=None, date=None, task=None,
+def add_entry(employee_name=None, raw_date=None, task=None,
               time=None, notes=None, decision=None):
     '''Menu to add a new entry to the database'''
 
-    if not employee_name:
-        while True:
-            clear_screen()
-            print("Welcome, please type in your name.")
-            try:
+    access = None
+    loop = True
+
+    clear_screen()
+    if not notes:
+        input("Press enter to start adding an entry")
+        access = True
+
+    while loop:
+        clear_screen()
+        print("Please type in your name.")
+        try:
+            if access:
                 employee_name = input(">  ")
-                if employee_name:
-                    try:
-                        int(employee_name)
-                        clear_screen()
-                        input(not_valid)
-                        continue
-                    except ValueError:
-                        break
-                else:
-                    raise ValueError
-            except ValueError:
-                clear_screen()
+            if employee_name:
+                try:
+                    int(employee_name)
+                    clear_screen()
+                    input(not_valid)
+                    continue
+                except ValueError:
+                    break
+            else:
+                raise ValueError
+        except ValueError:
+            clear_screen()
+            if access:
                 input("Your input is not valid, press enter to try again.")
                 continue
+            else:
+                raise ValueError
 
-    if not date:
-        while True:
-            clear_screen()
-            print("What is the date of the task?")
+    while True:
+        clear_screen()
+        print("What is the date of the task?")
+        if access:
             raw_date = input("Use the format DD/MM/YYYY  >  ")
-            try:
-                date = datetime.datetime.strptime(raw_date, "%d/%m/%Y")
-                break
-            except ValueError:
-                clear_screen()
-                print("Ups! Seems like '{}' isn't a valid date.".format(raw_date))
+        try:
+            date = datetime.datetime.strptime(raw_date, "%d/%m/%Y")
+            break
+        except ValueError:
+            clear_screen()
+            print("Ups! Seems like '{}' isn't a valid date.".format(raw_date))
+            if access:
                 input(enter)
                 continue
+            else:
+                raise ValueError
 
-    if not task:
-        while True:
-            task = None
-            clear_screen()
-            print("What is the task name?")
-            try:
+    while True:
+        clear_screen()
+        print("What is the task name?")
+        try:
+            if access:
                 task = input(">  ")
-                if task:
-                    break
-                else:
-                    raise ValueError
-            except ValueError:
-                clear_screen()
-                print("You have to give your task a name")
+            if task:
+                break
+            else:
+                raise ValueError
+        except ValueError:
+            clear_screen()
+            print("You have to give your task a name")
+            if access:
                 input("Press enter to try again")
                 continue
+            else:
+                raise ValueError
 
-    if not time:
-        while True:
-            try:
-                clear_screen()
-                print("How much time did it take in rounded minutes?")
+    while True:
+        try:
+            clear_screen()
+            print("How much time did it take in rounded minutes?")
+            if access:
                 time = int(input(">  "))
-                if time < 0:
-                    raise ValueError
-                break
-            except ValueError:
-                clear_screen()
-                print(not_valid)
+            if time < 0:
+                raise ValueError
+            break
+        except ValueError:
+            clear_screen()
+            print(not_valid)
+            if access:
                 input(enter)
                 continue
+            else:
+                raise ValueError
 
-    if not notes:
-        clear_screen()
-        print("Additional notes...if you dont "
-              "have any notes please press enter")
+    clear_screen()
+    print("Additional notes...if you dont "
+          "have any notes please press enter")
+    if access:
         notes = input(">  ")
 
-    if not decision:
-        clear_screen()
-        print("Thank you! Do you want to submit your entry? Y/N")
+    clear_screen()
+    print("Thank you! Do you want to submit your entry? Y/N")
+    if access:
         decision = input(">  ")
 
     if decision.upper() == 'Y':
         start.add_to_file(employee_name, date, task, time, notes)
         clear_screen()
-        input("The entry has been added successfully! Press enter to continue")
+        if access:
+            input("The entry has been added successfully! Press enter to continue")
     else:
         clear_screen()
-        input("Your entry will not be saved, press enter to continue")
+        if access:
+            input("Your entry will not be saved, press enter to continue")
+        else:
+            return 'test_successful'
 
 
 def search_entry():
@@ -384,10 +407,10 @@ def main_menu(input_menue=None):
             else:
                 raise ValueError
         except ValueError:
-                clear_screen()
-                print(not_valid)
-                input(enter)
-                continue
+            clear_screen()
+            print(not_valid)
+            input(enter)
+            continue
 
 
 if __name__ == "__main__":

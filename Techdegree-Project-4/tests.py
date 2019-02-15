@@ -47,7 +47,11 @@ def add_to_file():
 class AlgorithmTests(unittest.TestCase):
 
     def setUp(self):
-        # This mimics the user input
+
+        data = WorkLog()
+        data = data.select()
+        self.search_solution = data.where(WorkLog.notes.contains("agtzuiklmnbew"))
+
         self.employee_name = 'Test Person'
         self.date = datetime.datetime(2019, 1, 1, 0, 0, 0, 0)
         self.task = 'Test Task'
@@ -119,13 +123,28 @@ class AlgorithmTests(unittest.TestCase):
     def test_add_entry(self):
         employee_name = "TestPerson"
         raw_date = "12/12/2019"
-        date = datetime.datetime.strptime(raw_date, "%d/%m/%Y")
         task = "TestTask"
         time = 45
-        notes = "TestNotes"
+        notes = "agtzuiklmnbew"
         decision = "Y"
-        log.add_entry(employee_name, date, task, time, notes, decision)
-        self.assertEqual(employee_name, log.employee_name) # input und die Data welche in der Datenbank ist
+        log.add_entry(employee_name, raw_date, task, time, notes, decision)
+        self.assertEqual([value.notes for value in self.search_solution], [notes])
+        for value in self.search_solution:
+            value.delete_instance()
+
+        self.assertEqual(log.add_entry(employee_name, raw_date, task, time, notes, decision='N'), 'test_successful')
+
+        with self.assertRaises(ValueError):
+            log.add_entry(employee_name=employee_name, raw_date='45', task=task, time=time, notes=notes, decision='N')
+
+        with self.assertRaises(ValueError):
+            log.add_entry(employee_name=None, raw_date=raw_date, task=task, time=time, notes=notes, decision='N')
+
+        with self.assertRaises(ValueError):
+            log.add_entry(employee_name=employee_name, raw_date=raw_date, task=None, time=time, notes=notes, decision='N')
+
+        with self.assertRaises(ValueError):
+            log.add_entry(employee_name=employee_name, raw_date=raw_date, task=task, time=-1, notes=notes, decision='N')
 
     def test_search_entry(self):
         pass
