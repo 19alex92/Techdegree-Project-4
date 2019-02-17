@@ -66,35 +66,43 @@ class AlgorithmTests(unittest.TestCase):
         )
 
     def test_search_string(self):
+        """Runs the string search over a test database"""
         method = start_testing.search_string(self.employee_name, TestData)
         self.assertEqual(method, data)
 
     def test_search_employee(self):
+        """Runs the employee search over a test database"""
         method = start_testing.search_employee(self.employee_name, TestData)
         self.assertEqual(method, data)
 
     def test_search_time(self):
+        """Runs the time search over a test database"""
         method = start_testing.search_time(self.time, TestData)
         self.assertEqual(method, data)
 
     def test_search_date(self):
+        """Runs the date search over a test database"""
         method = start_testing.search_date(self.date, TestData)
         self.assertEqual(method, data)
 
     def test_search_between_date(self):
+        """Runs the between date search over a test database"""
         method = start_testing.search_between_date(self.date,
                                                    self.date, TestData)
         self.assertEqual(method, data)
 
     def test_show_all_employees(self):
+        """Runs show all employees over a test database"""
         method = start_testing.show_all_employees(TestData)
         self.assertEqual([data for data in method], [self.employee_name])
 
     def test_show_all_dates(self):
+        """Runs show all dates over a test database"""
         method = start_testing.show_all_dates(TestData)
         self.assertEqual([data for data in method], ['01/01/2019'])
 
     def test_edit_entry(self):
+        """Edits an entry over the test database"""
         method = start_testing.edit_entry(TestData.get(), 1,
                                           self.employee_name)
         self.assertEqual(method, TestData.get())
@@ -108,6 +116,7 @@ class AlgorithmTests(unittest.TestCase):
         self.assertEqual(method, TestData.get())
 
     def test_texts(self):
+        """Tests if text is string"""
         text = str(log.enter)
         self.assertEqual(log.enter, text)
 
@@ -130,6 +139,7 @@ class AlgorithmTests(unittest.TestCase):
         self.assertEqual(log.text_main_menu, text)
 
     def test_add_entry(self):
+        """Adds a test entry + tests all Value Errors"""
         log.add_entry(self.employee_name, self.raw_date, self.task,
                       self.time, self.notes, decision='Y', access=False)
 
@@ -165,6 +175,7 @@ class AlgorithmTests(unittest.TestCase):
                           notes=self.notes, decision='N', access=False)
 
     def test_search_entry(self):
+        """Adds a test entry + tests all Value Errors"""
         log.add_entry(self.employee_name, self.raw_date, self.task, self.time,
                       self.notes, decision='Y', access=False)
 
@@ -224,6 +235,7 @@ class AlgorithmTests(unittest.TestCase):
             log.search_entry(input_search='e', input_user=None, access=False)
 
     def test_result_menue(self):
+        """Adds a test entry and tests agains various inputs"""
         log.add_entry(self.employee_name, self.raw_date, self.task, self.time,
                       self.notes, decision='Y', access=False)
 
@@ -249,6 +261,7 @@ class AlgorithmTests(unittest.TestCase):
             value.delete_instance()
 
     def test_main_menu(self):
+        """Adds a test entry + tests all Value Errors"""
         self.assertEqual(log.main_menu(input_menue='a',
                                        access=False), 'test_successful')
         self.assertEqual(log.main_menu(input_menue='c',
