@@ -66,8 +66,8 @@ def add_entry(employee_name=None, raw_date=None, task=None,
                 employee_name = input(">  ")
             if employee_name:
                 try:
-                    int(employee_name)
                     clear_screen()
+                    int(employee_name)
                     input(not_valid)
                     continue
                 except ValueError:
@@ -151,7 +151,8 @@ def add_entry(employee_name=None, raw_date=None, task=None,
         start.add_to_file(employee_name, date, task, time, notes)
         clear_screen()
         if access:
-            input("The entry has been added successfully! Press enter to continue")
+            input("The entry has been added successfully! "
+                  "Press enter to continue")
     else:
         clear_screen()
         if access:
@@ -160,7 +161,9 @@ def add_entry(employee_name=None, raw_date=None, task=None,
             return 'test_successful'
 
 
-def search_entry(input_search=None, raw_date_input=None, input_user=None, raw_date1_input=None, raw_date2_input=None, access=True):
+def search_entry(input_search=None, raw_date_input=None,
+                 input_user=None, user_input_2='X', raw_date1_input=None,
+                 raw_date2_input=None, access=True):
     '''Menu to search for an existing entry'''
     date1 = None
     date2 = None
@@ -196,15 +199,20 @@ def search_entry(input_search=None, raw_date_input=None, input_user=None, raw_da
                 clear_screen()
                 print("Ups! Seems like '{}' isn't a valid date."
                       .format(raw_date_input))
-                print(try_again)
+                print("Please try again or press 'R' "
+                      "to return to the main menu")
                 if access:
-                    user_input = input(">  ")
-                    if user_input.upper() == "R": #  TODO TEXT ÄNDERN SODASS USER DAS SIEHT
+                    user_input_2 = input(">  ")
+                if user_input_2.upper() == "R":
+                    if access:
                         break
                     else:
-                        continue
+                        raise ValueError
                 else:
-                    raise ValueError
+                    if access:
+                        continue
+                    else:
+                        raise ValueError
 
         elif input_search.lower() == "b":
             # search between two dates
@@ -220,13 +228,17 @@ def search_entry(input_search=None, raw_date_input=None, input_user=None, raw_da
                       .format(raw_date1_input))
                 print(try_again)
                 if access:
-                    user_input = input(">  ")
-                    if user_input.upper() == "R":
+                    user_input_2 = input(">  ")
+                if user_input_2.upper() == "R":
+                    if access:
                         break
                     else:
-                        continue
+                        raise ValueError
                 else:
-                    raise ValueError
+                    if access:
+                        continue
+                    else:
+                        raise ValueError
             clear_screen()
             print("Please enter the second date")
             if access:
@@ -239,13 +251,17 @@ def search_entry(input_search=None, raw_date_input=None, input_user=None, raw_da
                       .format(raw_date2_input))
                 print(try_again)
                 if access:
-                    user_input = input(">  ")
-                    if user_input.upper() == "R":
+                    user_input_2 = input(">  ")
+                if user_input_2.upper() == "R":
+                    if access:
                         break
                     else:
-                        continue
+                        raise ValueError
                 else:
-                    raise ValueError
+                    if access:
+                        continue
+                    else:
+                        raise ValueError
             search_file = start.search_between_date(date1, date2)
             if access:
                 result_menue(search_file)
@@ -261,7 +277,9 @@ def search_entry(input_search=None, raw_date_input=None, input_user=None, raw_da
                 if access:
                     input_user = int(input("EXAMPLE: Use the format "
                                            "45 for 45 minutes:  "))
-                search_file = start.search_time(input_user)
+                elif not int(input_user):
+                    raise ValueError
+                search_file = start.search_time(int(input_user))
                 if access:
                     result_menue(search_file)
                 else:
@@ -270,8 +288,11 @@ def search_entry(input_search=None, raw_date_input=None, input_user=None, raw_da
             except ValueError:
                 clear_screen()
                 print(not_valid)
-                input(enter)
-                continue
+                if access:
+                    input(enter)
+                    continue
+                else:
+                    raise ValueError
 
         elif input_search.lower() == "d":
             # search for string in title, notes or name of employee
@@ -292,8 +313,11 @@ def search_entry(input_search=None, raw_date_input=None, input_user=None, raw_da
                     raise ValueError
             except ValueError:
                 clear_screen()
-                input(no_entry)
-                continue
+                if access:
+                    input(no_entry)
+                    continue
+                else:
+                    raise ValueError
 
         elif input_search.lower() == "e":
             # search for name of employee
@@ -319,8 +343,11 @@ def search_entry(input_search=None, raw_date_input=None, input_user=None, raw_da
                     raise ValueError
             except ValueError:
                 clear_screen()
-                input(no_entry)
-                continue
+                if access:
+                    input(no_entry)
+                    continue
+                else:
+                    raise ValueError
 
         elif input_search.lower() == "f":
             break
@@ -333,10 +360,10 @@ def search_entry(input_search=None, raw_date_input=None, input_user=None, raw_da
                 continue
             else:
                 return 'test_successful'
-                break
 
 
-def result_menue(search_file):
+def result_menue(search_file, user_input=None, user_input_2='X',
+                 page_count=False, access=True):
     '''Displays the search results in a meaningful way'''
     total_page = len(search_file)
     current_page = 1
@@ -359,82 +386,132 @@ def result_menue(search_file):
                 print('='*(len(timestamp)+13))
                 print("\nResult {} of {}".format(current_page, total_page))
                 print("\n[N]ext, [E]dit, [D]elete, [R]eturn to search menu")
-                user_input = input(">  ")
+                if access:
+                    user_input = input(">  ")
                 if user_input.upper() == "N":
-                    if current_page < total_page:
+                    if current_page < total_page or page_count:
                         clear_screen()
                         current_page += 1
-                        continue
+                        if access:
+                            continue
+                        else:
+                            return 'test_successful'
                     else:
                         clear_screen()
                         current_page = 1
-                        continue
+                        if access:
+                            continue
+                        else:
+                            return 'test_successful'
+
                 elif user_input.upper() == "E":
                     # Menue to edit entrys
                     clear_screen()
                     print(edit_entry_text)
-                    input_key = int(input(">  "))
+                    if access:
+                        input_key = int(input(">  "))
                     clear_screen()
                     print("Please type in your updated entry and press enter")
-                    input_user = input(">  ")
-                    start.edit_entry(value, input_key, input_user)
+                    if access:
+                        input_user = input(">  ")
+                        start.edit_entry(value, input_key, input_user)
                     clear_screen()
-                    input("Update sucessful! Press enter to continue")
-                    break
+                    if access:
+                        input("Update sucessful! Press enter to continue")
+                        break
+                    else:
+                        return 'test_successful'
 
                 elif user_input.upper() == "D":
                     # Menue to delete entrys
                     clear_screen()
                     print("\nAre you sure you want to delete this entry? Y/N")
-                    user_input = input(">  ")
-                    if user_input.upper() == "Y":
-                        start.delete_entry(value)
+                    if access:
+                        user_input_2 = input(">  ")
+                    if user_input_2.upper() == "Y":
                         clear_screen()
-                        input("Deleting successful press enter to continue")
-                        loop = False
-                    continue
+                        if access:
+                            start.delete_entry(value)
+                            input("Deleting successful "
+                                  "press enter to continue")
+                            loop = False
+                        else:
+                            return 'test_successful'
+                    else:
+                        if access:
+                            continue
+                        else:
+                            return 'test_successful'
+
                 elif user_input.upper() == "R":
-                    search_entry()
+                    if access:
+                        search_entry()
+                    else:
+                        return 'test_successful'
                     loop = False
                 else:
                     clear_screen()
                     print(not_valid)
-                    input(enter)
-                    continue
+                    if access:
+                        input(enter)
+                        continue
+                    else:
+                        return 'test_successful'
         else:
             input("No search result, press enter to try again")
             search_entry()
             break
 
 
-def main_menu(input_menue=None):
+def main_menu(input_menue=None, entry=True, access=True):
     '''Displays the main menu of the application'''
     while True:
         clear_screen()
         print(text_main_menu)
         try:
-            input_menue = input("  > ")
+            if access:
+                input_menue = input("  > ")
             if input_menue.upper() == "A":
-                add_entry()
-                continue
+                if access:
+                    add_entry()
+                    continue
+                else:
+                    return 'test_successful'
             elif input_menue.upper() == "B":
                 try:
-                    search_entry()
-                    continue
-                except FileNotFoundError:
+                    if data.select().exists():
+                        if access:
+                            search_entry()
+                            continue
+                        elif not entry:
+                            raise ValueError
+                        else:
+                            return 'test_successful'
+                    else:
+                        raise ValueError
+                except ValueError:
                     clear_screen()
                     print("No file, please add entry before search")
-                    input(enter)
-                    continue
+                    if access:
+                        input(enter)
+                        continue
+                    else:
+                        raise ValueError
             elif input_menue.upper() == "C":
-                break
+                if access:
+                    break
+                else:
+                    return 'test_successful'
             else:
                 raise ValueError
         except ValueError:
             clear_screen()
             print(not_valid)
-            input(enter)
-            continue
+            if access:
+                input(enter)
+                continue
+            else:
+                raise ValueError
 
 
 if __name__ == "__main__":
